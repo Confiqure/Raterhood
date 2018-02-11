@@ -118,3 +118,33 @@ function getSpotCrimeData(long_state)
     request.send();
   });
 }
+
+function getHomeScore(latLong)
+{
+    return new Promise(function(resolve, reject) {
+        var request = new XMLHttpRequest();
+        request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + lat + '&lon=' + lon + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F');
+        var solution = [];
+        request.onload = function(){
+            if (request.status === 200) {
+                var json_data = JSON.parse( request.response );
+                console.log( request.response );
+                console.log( json_data );
+                //console.log('quiet: ' + data.totalHomeScores.quiet.value);
+                //console.log('safety: ' + data.totalHomeScores.safety.value);
+                solution.push(responseJSON['data']['totalHomeScores']['quiet']);
+                solution.push(responseJSON['data']['totalHomeScores']['quiet']);
+                resolve(solution);
+            }
+            else {
+            // Otherwise reject with the status text
+            // which will hopefully be a meaningful error
+                reject(Error(request.statusText));
+            }
+        };
+    request.onerror = function() {
+        reject(Error("Network Error"));
+    };
+    request.send();
+  });
+}
