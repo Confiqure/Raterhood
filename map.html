@@ -185,14 +185,17 @@
                     if (censusVariable > censusMax) {
                         censusMax = censusVariable;
                     }
-                    if (censusVariable == null ||
-                        isNaN(censusVariable)) {
-                        censusVariable = 0;
-                    }
+                   
                     // update the existing row with the new data
-                    map.data
-                        .getFeatureById(stateId)
-                        .setProperty('census_variable', censusVariable);
+                    try {
+                        map.data
+                            .getFeatureById(stateId)
+                            .setProperty('census_variable', censusVariable);
+                    } catch ( err ) {
+                        map.data
+                            .getFeatureById(stateId)
+                            .setProperty('census_variable', 0);
+                    }
                 });
 
                 // update and display the legend
