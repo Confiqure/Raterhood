@@ -44,7 +44,7 @@ h6 {
 
 .bg-darker {
   background-color: #1F4336 !important;
-  padding: 36% 0 !important;
+  padding: calc(100vh) 0 !important;
 }
 
 .bg-dark {
