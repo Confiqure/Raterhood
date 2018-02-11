@@ -118,6 +118,8 @@
                                 if(( latitude !== null) && (longitude !== null ))
                                 {
                                     setLocalZip( latitude, longitude );
+                                    local_zip = localStorage.getItem("local_zip");
+                                    localStorage.removeItem("local_zip");
                                 }
                             }
                             console.log( place );
@@ -140,12 +142,20 @@
                                     for( i=0; i < response.length; i++ ) {
                                         console.log( response[i] );
                                         
-                                        homeScore( latitude, longitude, response[i] );
+                                        getLatLongFromZip(response[i]).then(function(res, zip) {
+                                            console.log( res );
+                                            homeScore( res[0], res[1], response[i] );
+                                            }, function(error) {
+                                                console.error("Failed!", error);
+                                        });
+                                        
+                                        
                                         //count = 0;
                                         //while(( localStorage.getItem("homeScore_" + response[i]) === null )&&(count <= 10)){ setTimeout(function(){ console.log( "WAITING..!" ); }, 50); count += 1; }
 
 
                                     }
+                                    map.data.setStyle(styleFeature);
                                     //localStorage.removeItem("lat");
                                     //localStorage.removeItem("lng");
                                 }, function(error) {
@@ -174,7 +184,7 @@
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v37");
+                      console.log("loading map shapes v40");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
@@ -275,6 +285,8 @@
                                 }
                                 else
                                 {
+                                    zipsMap.set(zip, 0);
+                                    map.data.setStyle(styleFeature);
                                     console.log("Homescore FAILED");
                                     console.log(request.status + request.responseText);
                                 }
@@ -306,6 +318,7 @@
                                 }
                                 console.log( solution );
                                 local_zip = String(solution);
+                                localStorage.setItem("local_zip", String(solution));
                             }
                         };
                         request.send();
