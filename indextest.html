@@ -125,7 +125,7 @@
                             }, 2000);
                           }
                         catch(err){
-                          
+
                         }
                       });
 
@@ -181,7 +181,7 @@
                           strokeWeight: 0.5,
                           strokeColor: '#000000',
                           zIndex: 1,
-                          fillColor: '#fff',
+                          fillColor: getColor(Math.random()*100),
                           fillOpacity: 0.5,
                           visible: true
                       };
@@ -219,10 +219,10 @@
                         //document.getElementById("address").value = localStorage.getItem("boobs");
                     }
                   };
-                  
-                   
+
+
                    //set zipsMap
-                  
+
                     function homeScore(lat, lng)
                     {
                             var request = new XMLHttpRequest();
@@ -238,7 +238,7 @@
                         request.send();
                       };
                     }
-                    
+
                     function setLocalZip(lat, lng)
                     {
                         var request = new XMLHttpRequest();
@@ -256,7 +256,7 @@
                         };
                         request.send();
                     }
-                   
+
 
               </script>
             </div>
