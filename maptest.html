@@ -126,6 +126,7 @@
                 zoom: 12,
                 //styles: mapStyle
             });
+            map.setOptions({ minZoom: 12, maxZoom: 15 });
 
             var marker = new google.maps.Marker({
                 position: uluru,
@@ -235,6 +236,9 @@
             var showRow = true;
             if (feature.getProperty('census_variable') == null ||
                 isNaN(feature.getProperty('census_variable'))) {
+                color[0] = 255;
+                color[1] = 255;
+                color[2] = 255;
     //            showRow = false;
             }
 

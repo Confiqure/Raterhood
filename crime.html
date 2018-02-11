@@ -7,68 +7,28 @@
         function getSpotCrimeData(long_state)
         {
             state = abbrState(long_state, 'abbr');
-            
             var request = new XMLHttpRequest();
             request.open( 'GET', 'https://api.usa.gov/crime/fbi/ucr/estimates/states/'+state+'?page=1&per_page=1000&output=json&api_key=iiHnOKfno2Mgkt5AynpvPpUQTEyxE77jo1RU8PIv');
-            
             request.setRequestHeader('Accept', 'application/json');
-            
-            
             request.onload = function(){
                 console.log( request.response );
                 console.log( request.status );
                 var json_data = JSON.parse( request.response );
                 var length = (json_data['results'].length);
                 var relevant_data = json_data['results'][length-1];
-                
-                var total_crimes = relevant_data['aggravated_assault'] + relevant_data['burglary']
-                console.log( total_crimes );
+                var total_crimes = relevant_data['aggravated_assault'] + relevant_data['burglary'] + relevant_data['homicide'];
+                total_crimes += relevant_data['caveats'] + relevant_data['rape_legacy'] + relevant_data['violent_crime'];
+                total_crimes += relevant_data['larceny'] + relevant_data['property_crime'] + relevant_data['robbery'];
+                total_crimes += relevant_data['rape_revised'] + relevant_data['motor_vehicle_theft'];
+                var population = relevant_data['population'];
+                console.log( (total_crimes/population)*100 );
             };
-            
             request.send();
-            
-            
-            /*
-            $.ajax({
-            url: 'https://jgentes-Crime-Data-v1.p.mashape.com/crime?enddate=9%2F25%2F2015&lat=37.757815&long=-122.5076392&startdate=9%2F19%2F2015',
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("X-Mashape-Key", "hne3Lvm1gcmsh0IPTSjiYuNttLWtp1SOVNPjsnafa644Gk0GCE");
-                xhr.setRequestHeader("Accept", "application/json");
-            }, success: function(data){
-                alert(data);
-                //process the JSON data etc
-            }
-            });
-            */
-        
-            /*
-            var loc = {
-                lat: 33.39657,
-                lon: -112.03422
-            };
-
-            var radius = 0.01; // this is miles
-
-            return spotcrime.getCrimes(loc, radius, function(err, crimes){
-
-            });
-            */
         }
         
-        window.onload = function() {
-            //document.getElementById("spotCrimeData").value = getSpotCrimeData();
-            getSpotCrimeData("New Hampshire");
-        };
-        
+        getSpotCrimeData("New Hampshire");
     </script>
-    
-    <p id="spotCrimeData">
         
-    </p>
-    
-    <p>
-        https://api.usa.gov/crime/fbi/ucr/estimates/national?page=1&per_page=10&output=json&api_key=iiHnOKfno2Mgkt5AynpvPpUQTEyxE77jo1RU8PIv
-    </p>
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
