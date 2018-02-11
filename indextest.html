@@ -245,11 +245,11 @@
                       lng = cursor.lng();
 
                       getSpotCrimeData("Massachusetts").then(function(response){
-                      
+
                             setTempZip( lat, lng ).then(function(res) {
 
                                   var content = "<b>" + e.feature.getProperty('PC_NAME') +
-                                      "</b><br/>Homescore: "+ zipsMap.get(temp_zip) + 
+                                      "</b><br/>Homescore: "+ zipsMap.get(temp_zip) +
                                       "</b><br/>Crimescore: "+ (Math.round(response * 100) / 100) + "%";
 
                                   console.log(content);
@@ -283,7 +283,7 @@
                         console.log("Longitude: ",lng);
                         console.log("Zip: ",zip);
                             var request = new XMLHttpRequest();
-                            request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + lat + '&lon=' + lng + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F');
+                            request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + lat + '&lon=' + lng + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F', true);
                             var solution = [];
                             request.onload = function(){
                               console.log(request.responseText);
