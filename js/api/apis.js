@@ -145,3 +145,31 @@ function getHomeScore(latLong)
     request.send();
   });
 }
+
+function getZipCode(lat,long)
+{
+    return new Promise(function(resolve, reject) {
+        var request = new XMLHttpRequest();
+        request.open( 'GET', 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+String(lat)+','+String(long)+'&key=AIzaSyC0lJFqMcgy_CDwPz8lJ6YZnCgDJaphiSg');
+        var solution = [];
+        request.onload = function(){
+            if (request.status === 200) {
+                var json_data = JSON.parse( request.response );
+                solution = (json_data['totalHomeScores']['safety']['value'] * 0.7);
+                solution += (json_data['totalHomeScores']['quiet']['value'] * 0.3);
+                console.log( solution );
+                resolve(solution);
+            }
+            else {
+            // Otherwise reject with the status text
+            // which will hopefully be a meaningful error
+                reject(Error(request.statusText));
+            }
+        };
+    request.onerror = function() {
+        reject(Error("Network Error"));
+    };
+    request.send();
+  });
+}
+

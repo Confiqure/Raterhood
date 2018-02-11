@@ -96,15 +96,24 @@
                   zipsMap.set("02108", 100);
                   var uluru = { lat: 43.1389, lng: -70.937 };
                   var marker;
+                  var local_zip;
                   function initMap() {
+                      localStorage.setItem("place", "");
+                      
                       var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
                       google.maps.event.addListener(autocomplete, 'place_changed', function() {
                         try{
                             var place = autocomplete.getPlace();
+                            while( String(localStorage.getItem("place")) === "" )
+                            {
+                                setTimeout(function(){ }, 100);
+                                localStorage.setItem("place", String(place));
+                            }
                             console.log( place );
-                            localStorage.setItem("boobs", "I love boobs");
-                            getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
-                            console.log(place.address_components);
+                            localStorage.setItem("lat", String(place.geometry.location.lat()));
+                            localStorage.setItem("lng", String(place.geometry.location.lng()));
+                            //homeScore(place.geometry.location.lat(), place.geometry.location.lng());
+                            //console.log(place.address_components);
                             //zipsMap = getScoreMap();
                             $('.showMe').slideDown('slow');
                             google.maps.event.trigger(map,'resize');
@@ -133,6 +142,7 @@
                       map.data.setStyle(styleFeature);
                       map.data.addListener('click', mouseInToRegion);
                       loadMapShapes();
+                      setLocalZip( localStorage.getItem("lat"), localStorage.getItem("lng") );
                   }
 
                   function loadMapShapes() {
@@ -206,17 +216,17 @@
 
                   window.onload = function() {
                     if(localStorage.getItem("boobs") !== null){
-                        document.getElementById("address").value = localStorage.getItem("boobs");
+                        //document.getElementById("address").value = localStorage.getItem("boobs");
                     }
                   };
                   
-                  //var local_zip;
-                  // set zipsMap
-                  /*
-                    function homeScore(lat, long)
+                   
+                   //set zipsMap
+                  
+                    function homeScore(lat, lng)
                     {
                             var request = new XMLHttpRequest();
-                            request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + latLong[0] + '&lon=' + latLong[1] + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F');
+                            request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + lat + '&lon=' + lng + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F');
                             var solution = [];
                             request.onload = function(){
                                 if (request.status === 200) {
@@ -228,7 +238,25 @@
                         request.send();
                       };
                     }
-                   */
+                    
+                    function setLocalZip(lat, lng)
+                    {
+                        var request = new XMLHttpRequest();
+                        request.open( 'GET', 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+String(lat)+','+String(lng)+'&key=AIzaSyC0lJFqMcgy_CDwPz8lJ6YZnCgDJaphiSg');
+                        request.onload = function(){
+                            if (request.status === 200) {
+                                var json_data = JSON.parse( request.response );
+                                solution = json_data['results']['address_components'];
+                                console.log( solution );
+                                length = solution.length;
+                                solution = solution[length-1]["long_name"];
+                                console.log( solution );
+                                localStorage.setItem("local_zip", String(solution));
+                            }
+                        };
+                        request.send();
+                    }
+                   
 
               </script>
             </div>
