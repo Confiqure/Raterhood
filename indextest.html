@@ -91,12 +91,14 @@
               <script>
                 var map;
                 var uluru = { lat: 43.1389, lng: -70.937 };
+                var marker;
                   function initMap() {
                       var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
                       google.maps.event.addListener(autocomplete, 'place_changed', function() {
                           var place = autocomplete.getPlace();
                           getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
                           map.setCenter({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
+                          market.setPosition({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           console.log(place.address_components);
                           $('.showMe').slideToggle('slow');
                       });
@@ -105,7 +107,7 @@
                           zoom: 4,
                           center: uluru
                       });
-                      var marker = new google.maps.Marker({
+                      marker = new google.maps.Marker({
                           position: uluru,
                           map: map
                       });
@@ -138,7 +140,7 @@
                   // }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v4");
+                      console.log("loading map shapes v5");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
