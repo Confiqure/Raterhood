@@ -72,7 +72,7 @@
             <hr>
           </div>
           <div class="col-lg-6 mx-auto">
-            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en-US&key=AIzaSyD80MTnM0OQWoOiucVSgKYZJ8NYAmgzSFo&callback=initMap" async defer></script>
+            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en-US&key=AIzaSyD0QRSGhHYu-NDVQeH3NDkdT3i-Vm6gA-M&callback=initMap" async defer></script>
           </div>
         </div>
       </div>
@@ -97,13 +97,14 @@
                   var local_zip;
                   var uluru = { lat: 43.1389, lng: -70.937 };
                   var marker;
+                  var latitude;
+                  var longitude;
                   function initMap() {
-                      localStorage.clear();
                       localStorage.removeItem("place");
                       localStorage.removeItem("lat");
                       localStorage.removeItem("lng");
                       localStorage.setItem("place", "");
-                      
+
                       var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
                       google.maps.event.addListener(autocomplete, 'place_changed', function() {
                         try{
@@ -112,17 +113,17 @@
                             {
                                 setTimeout(function(){ }, 100);
                                 localStorage.setItem("place", String(place));
-                                localStorage.setItem("lat", String(place.geometry.location.lat()));
-                                localStorage.setItem("lng", String(place.geometry.location.lng()));
-                                if(( localStorage.getItem("lat") !== null) && (localStorage.getItem("lng") !== null ))
+                                latitude = String(place.geometry.location.lat());
+                                longitude = String(place.geometry.location.lng());
+                                if(( latitude !== null) && (longitude !== null ))
                                 {
-                                    setLocalZip( localStorage.getItem("lat"), localStorage.getItem("lng") );
+                                    setLocalZip( latitude, longitude );
                                     local_zip = localStorage.getItem("local_zip");
                                     localStorage.removeItem("local_zip");
                                 }
                             }
                             console.log( place );
-                            
+
                             //homeScore(place.geometry.location.lat(), place.geometry.location.lng());
                             //console.log(place.address_components);
                             //zipsMap = getScoreMap();
@@ -134,26 +135,24 @@
                             $('html, body').animate({
                                 scrollTop: $(".showMe").offset().top - 62
                             }, 2000);
-                            
+
                             getNearbyZipCodes(local_zip).then(function(response) {
                                     console.log("ZIP IS: ", local_zip);
                                     console.log("Success!", response);
-                                    for( i=0; i <= response.length; i++ ) {
+                                    for( i=0; i < response.length; i++ ) {
                                         console.log( response[i] );
-                                        homeScore( localStorage.getItem("lat"), localStorage.getItem("lng"), response[i] );
-                                        count = 0;
-                                        while(( localStorage.getItem("homeScore_" + response[i]) === null )&&(count <= 10)){ setTimeout(function(){ console.log( "WAITING..!" ); }, 50); count += 1; }
-                                        zipsMap.set(response[i], parseInt(localStorage.getItem("homeScore_" + response[i])));
-                                        console.log( "Score", parseInt(localStorage.getItem("homeScore_" + response[i])) );
-                                        map.data.setStyle(styleFeature);
-                                        localStorage.removeItem("homeScore_" + response[i]);
+                                        homeScore( latitude, longitude, response[i] );
+                                        //count = 0;
+                                        //while(( localStorage.getItem("homeScore_" + response[i]) === null )&&(count <= 10)){ setTimeout(function(){ console.log( "WAITING..!" ); }, 50); count += 1; }
+                                        console.log( "Final Score:", zipsMap[response[i]] );
+                                        
                                     }
                                     //localStorage.removeItem("lat");
                                     //localStorage.removeItem("lng");
                                 }, function(error) {
                                 console.error("Failed!", error);
                             });
-                            
+
                           }
                         catch(err){
 
@@ -176,7 +175,7 @@
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v36");
+                      console.log("loading map shapes v37");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
@@ -267,9 +266,11 @@
                                     solution = parseInt(json_data['totalHomeScores']['safety']['value']) * 0.7;
                                     console.log("Temp homescore", solution);
                                     solution += (parseInt(json_data['totalHomeScores']['quiet']['value']) * 0.3);
-                                    console.log("homeScore_" + zip);
                                     console.log("VALUE OF HOMESCORE", solution);
-                                    localStorage.setItem("homeScore_" + zip, String(solution));
+                                    
+                                    zipsMap.set(zip, parseInt(solution));
+                                    console.log( "Score", parseInt(solution) );
+                                    map.data.setStyle(styleFeature);
                                 }
                                 else
                                 {
