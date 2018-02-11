@@ -99,6 +99,7 @@
                   var marker;
                   var latitude;
                   var longitude;
+                  var temp_zip;
                   function initMap() {
                       localStorage.removeItem("place");
                       localStorage.removeItem("lat");
@@ -142,15 +143,14 @@
                                     for( i=0; i < response.length; i++ ) {
                                         console.log( response[i] );
                                         
-                                        count = 0;
-                                        while(count <= 10){ setTimeout(function(){ console.log( "WAITING..!" ); }, 100); count += 1; }
-
-                                        getLatLongFromZip(response[i]).then(function(res) {
-                                            console.log( res );
-                                            homeScore( res[0], res[1], res[2] );
-                                            }, function(error) {
-                                                console.error("Failed!", error);
-                                        });
+                                        setTimeout(getLatLongFromZip(response[i]).then(function(res) {
+                                                console.log( res );
+                                                homeScore( res[0], res[1], res[2] );
+                                                }, function(error) {
+                                                    console.error("Failed!", error);
+                                            }), 1000);
+                                            
+                                        
                                         
                                         
                                         //count = 0;
@@ -180,14 +180,14 @@
                           position: uluru,
                           map: map
                       });
-                      map.setOptions({ minZoom: 14, maxZoom: 17 });
+                      map.setOptions({ minZoom: 13, maxZoom: 17 });
                       map.data.setStyle(styleFeature);
                       map.data.addListener('click', mouseInToRegion);
                       loadMapShapes();
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v43");
+                      console.log("loading map shapes v45");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
@@ -239,16 +239,26 @@
                           infowindow.close();
                       }
                       catch (err) { }
+                      var cursor = e.latLng;
+                      
+                      setTempZip( cursor.lat, cursor.lng ).then(function(res) {
+                            console.log(res);
+                            console.log(temp_zip);
+                            console.log(zipsMap.get(temp_zip));
+                            
+                            var content = "<b>" + e.feature.getProperty('PC_NAME') +
+                                "</b><br/>Homescore: "+ zipsMap.get(temp_zip); ;
+                            
+                            console.log(content);
 
-
-                      var content = "<b>" + e.feature.getProperty('PC_NAME') +
-                          "</b><br/>Homescore: " ;
-
-                      infowindow = new google.maps.InfoWindow({
-                          content: content,
-                          position: e.latLng
-                      });
-                      infowindow.open(map);
+                            infowindow = new google.maps.InfoWindow({
+                                content: content,
+                                position: cursor
+                            });
+                            infowindow.open(map);
+                        }, function(error) {
+                                console.error("Failed!", error);
+                            });
 
                   }
 
@@ -321,6 +331,45 @@
                             }
                         };
                         request.send();
+                    }
+                    
+                    function setTempZip(lat, lng)
+                    {
+                        return new Promise(function(resolve, reject) {
+                            var request = new XMLHttpRequest();
+                            request.open( 'GET', 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+String(lat)+','+String(lng)+'&key=AIzaSyC0lJFqMcgy_CDwPz8lJ6YZnCgDJaphiSg');
+                            request.onload = function(){
+                                if (request.status === 200) {
+                                    var json_data = JSON.parse( request.responseText );
+                                    console.log( json_data );
+                                    solution = json_data['results'][0]['address_components'];
+                                    console.log( solution );
+                                    length = solution.length;
+                                    type_1 = solution[length-1]["types"][0];
+                                    type_2 = solution[length-2]["types"][0];
+                                    if( type_1 === "postal_code" )
+                                    {
+                                        solution = String(solution[length-1]["long_name"]);
+                                    }
+                                    else
+                                    {
+                                        solution = String(solution[length-2]["long_name"]);
+                                    }
+                                    console.log( solution );
+                                    temp_zip = String(solution);
+                                    resolve(temp_zip);
+                                }
+                                else {
+                                // Otherwise reject with the status text
+                                // which will hopefully be a meaningful error
+                                    reject(Error(request.statusText));
+                                }
+                            };
+                        request.onerror = function() {
+                            reject(Error("Network Error"));
+                        };
+                        request.send();
+                      });
                     }
 
 
