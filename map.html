@@ -124,6 +124,7 @@
         var map;
         var censusMin = Number.MAX_VALUE, censusMax = -Number.MAX_VALUE;
 
+
         function initMap() {
 
             // load the map
@@ -269,6 +270,7 @@
 
             var percent = (e.feature.getProperty('census_variable') - censusMin) /
                 (censusMax - censusMin) * 100;
+            $(".gm-style-iw").parentElement.remove()
 
             var infowindow = new google.maps.InfoWindow({
                 content: info(e),
