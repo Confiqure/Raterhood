@@ -94,10 +94,14 @@
                   zipsMap.set("02114", 50);
                   zipsMap.set("02111", 75);
                   zipsMap.set("02108", 100);
+                  var local_zip;
                   var uluru = { lat: 43.1389, lng: -70.937 };
                   var marker;
-                  var local_zip;
                   function initMap() {
+                      localStorage.clear();
+                      localStorage.removeItem("place");
+                      localStorage.removeItem("lat");
+                      localStorage.removeItem("lng");
                       localStorage.setItem("place", "");
                       
                       var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
@@ -108,10 +112,17 @@
                             {
                                 setTimeout(function(){ }, 100);
                                 localStorage.setItem("place", String(place));
+                                localStorage.setItem("lat", String(place.geometry.location.lat()));
+                                localStorage.setItem("lng", String(place.geometry.location.lng()));
+                                if(( localStorage.getItem("lat") !== null) && (localStorage.getItem("lng") !== null ))
+                                {
+                                    setLocalZip( localStorage.getItem("lat"), localStorage.getItem("lng") );
+                                    local_zip = localStorage.getItem("local_zip");
+                                    localStorage.removeItem("local_zip");
+                                }
                             }
                             console.log( place );
-                            localStorage.setItem("lat", String(place.geometry.location.lat()));
-                            localStorage.setItem("lng", String(place.geometry.location.lng()));
+                            
                             //homeScore(place.geometry.location.lat(), place.geometry.location.lng());
                             //console.log(place.address_components);
                             //zipsMap = getScoreMap();
@@ -123,6 +134,26 @@
                             $('html, body').animate({
                                 scrollTop: $(".showMe").offset().top - 62
                             }, 2000);
+                            
+                            getNearbyZipCodes(local_zip).then(function(response) {
+                                    console.log("ZIP IS: ", local_zip);
+                                    console.log("Success!", response);
+                                    for( i=0; i <= response.length; i++ ) {
+                                        console.log( response[i] );
+                                        homeScore( localStorage.getItem("lat"), localStorage.getItem("lng"), response[i] );
+                                        count = 0;
+                                        while(( localStorage.getItem("homeScore_" + response[i]) === null )&&(count <= 10)){ setTimeout(function(){ console.log( "WAITING..!" ); }, 50); count += 1; }
+                                        zipsMap.set(response[i], parseInt(localStorage.getItem("homeScore_" + response[i])));
+                                        console.log( "Score", parseInt(localStorage.getItem("homeScore_" + response[i])) );
+                                        map.data.setStyle(styleFeature);
+                                        localStorage.removeItem("homeScore_" + response[i]);
+                                    }
+                                    //localStorage.removeItem("lat");
+                                    //localStorage.removeItem("lng");
+                                }, function(error) {
+                                console.error("Failed!", error);
+                            });
+                            
                           }
                         catch(err){
 
@@ -142,11 +173,10 @@
                       map.data.setStyle(styleFeature);
                       map.data.addListener('click', mouseInToRegion);
                       loadMapShapes();
-                      setLocalZip( localStorage.getItem("lat"), localStorage.getItem("lng") );
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v27");
+                      console.log("loading map shapes v36");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
@@ -165,7 +195,7 @@
                   }
 
                   function styleFeature(feature) {
-                      if(zipsMap.get(feature.getProperty("POSTCODE")) != undefined){
+                      if(zipsMap.get(feature.getProperty("POSTCODE")) !== undefined){
                         console.log("HELLO");
                         var color = getColor(zipsMap.get(feature.getProperty("POSTCODE")));
                         return {
@@ -181,7 +211,7 @@
                           strokeWeight: 0.5,
                           strokeColor: '#000000',
                           zIndex: 1,
-                          fillColor: getColor(Math.random()*100),
+                          fillColor: '#FFFFFF', //getColor(Math.random()*100),
                           fillOpacity: 0.5,
                           visible: true
                       };
@@ -223,18 +253,29 @@
 
                    //set zipsMap
 
-                    function homeScore(lat, lng)
+                    function homeScore(lat, lng, zip)
                     {
+                        console.log("Latitude: ",lat);
+                        console.log("Longitude: ",lng);
+                        console.log("Zip: ",zip);
                             var request = new XMLHttpRequest();
                             request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + lat + '&lon=' + lng + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F');
                             var solution = [];
                             request.onload = function(){
                                 if (request.status === 200) {
-                                    var json_data = JSON.parse( request.response );
-                                    solution = (json_data['totalHomeScores']['safety']['value'] * 0.7);
-                                    solution += (json_data['totalHomeScores']['quiet']['value'] * 0.3);
-                                    console.log( solution );
-                            };
+                                    var json_data = JSON.parse( request.responseText );
+                                    solution = parseInt(json_data['totalHomeScores']['safety']['value']) * 0.7;
+                                    console.log("Temp homescore", solution);
+                                    solution += (parseInt(json_data['totalHomeScores']['quiet']['value']) * 0.3);
+                                    console.log("homeScore_" + zip);
+                                    console.log("VALUE OF HOMESCORE", solution);
+                                    localStorage.setItem("homeScore_" + zip, String(solution));
+                                }
+                                else
+                                {
+                                    console.log("Homescore FAILED");
+                                    console.log(request.status + request.responseText);
+                                }
                         request.send();
                       };
                     }
@@ -245,12 +286,23 @@
                         request.open( 'GET', 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+String(lat)+','+String(lng)+'&key=AIzaSyC0lJFqMcgy_CDwPz8lJ6YZnCgDJaphiSg');
                         request.onload = function(){
                             if (request.status === 200) {
-                                var json_data = JSON.parse( request.response );
-                                solution = json_data['results']['address_components'];
+                                var json_data = JSON.parse( request.responseText );
+                                console.log( json_data );
+                                solution = json_data['results'][0]['address_components'];
                                 console.log( solution );
                                 length = solution.length;
-                                solution = solution[length-1]["long_name"];
+                                type_1 = solution[length-1]["types"][0];
+                                type_2 = solution[length-2]["types"][0];
+                                if( type_1 === "postal_code" )
+                                {
+                                    solution = String(solution[length-1]["long_name"]);
+                                }
+                                else
+                                {
+                                    solution = String(solution[length-2]["long_name"]);
+                                }
                                 console.log( solution );
+                                local_zip = String(solution);
                                 localStorage.setItem("local_zip", String(solution));
                             }
                         };

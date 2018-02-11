@@ -64,7 +64,7 @@ function getNearbyZipCodes(local_zip)
     return new Promise(function(resolve, reject) {
     var request = new XMLHttpRequest();
     var miles = 5;
-    request.open( 'GET', 'https://www.zipcodeapi.com/rest/js-JjMMmEtIsTuB9auc1hQ8PimXXHZFrAr724TyHJnxQh9zKeQfV37gkb0fNoUbpPPv/radius.csv/'+local_zip+'/'+miles+'/miles?minimal');
+    request.open( 'GET', 'https://www.zipcodeapi.com/rest/js-CtWbb88c4rVoBycY3MfAMMBW4wLaWvJzjPF1D5sxMXoiL8ykz5JFYa5cbQLM2mkG/radius.csv/'+String(local_zip)+'/'+miles+'/miles?minimal');
     request.onload = function(){
         if (request.status === 200) {
             // Resolve the promise with the response text
