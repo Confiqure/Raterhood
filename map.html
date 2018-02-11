@@ -143,7 +143,6 @@
 
             // state polygons only need to be loaded once, do them now
             loadMapShapes();
-
         }
 
         /** Loads the state boundary polygons from a GeoJSON source. */
@@ -264,14 +263,11 @@
             }
             catch (err) {}
 
-            // set the hover state so the setStyle function can change the border
-            //e.feature.setProperty('state', 'hover');
-
             var percent = (e.feature.getProperty('census_variable') - censusMin) /
                 (censusMax - censusMin) * 100;
 
-            var content = e.feature.getProperty('NAME') + "<br/>" +
-                e.feature.getProperty('census_variable').toLocaleString();
+            var content = "<b>" + e.feature.getProperty('NAME') + "</b><br/>Homescore: " +
+                e.feature.getProperty('census_variable').toLocaleString() + "<br/>Crime: ";
 
             infowindow = new google.maps.InfoWindow({
                 content: content,
