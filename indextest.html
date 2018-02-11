@@ -88,7 +88,11 @@
               <script>
                 var map;
                 var zipsMap = new Map();
-                zipsMap.set("01001", 0)
+                zipsMap.set("01001", 50);
+                zipsMap.set("02110", 25);
+                zipsMap.set("02114", 50);
+                zipsMap.set("02111", 75);
+                zipsMap.set("02108", 100);
                 var uluru = { lat: 43.1389, lng: -70.937 };
                 var marker;
                   function initMap() {
@@ -99,6 +103,7 @@
                           map.setCenter({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           marker.setPosition({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           console.log(place.address_components);
+                          //zipsMap = getScoreMap();
                           $('.showMe').slideToggle('slow');
                       });
 
@@ -115,7 +120,7 @@
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v18");
+                      console.log("loading map shapes v20");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
@@ -127,21 +132,21 @@
                       });
                   }
 
-                  function newrgb(r, g, b){
-                    return "rgb("+r+","+g+","+b+")";
+                  function getColor(value){
+                      var score = value / 100;
+                      var hue=((score)*120).toString(10);
+                      return ["hsl(",hue,",100%,50%)"].join("");
                   }
 
                   function styleFeature(feature) {
                       if(zipsMap.get(feature.getProperty("POSTCODE")) != undefined){
                         console.log("HELLO");
-                        var grayscale = 255 * ( zipsMap.get(feature.getProperty("POSTCODE")) / 100 );
-                        console.log(grayscale);
-                        var rgb = newrgb(grayscale, grayscale, grayscale);
+                        var color = getColor(zipsMap.get(feature.getProperty("POSTCODE")));
                         return {
                             strokeWeight: 0.5,
                             strokeColor: '#000000',
                             zIndex: 1,
-                            fillColor: rgb,
+                            fillColor: color,
                             fillOpacity: 0.5,
                             visible: true
                         };
