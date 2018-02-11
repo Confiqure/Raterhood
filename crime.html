@@ -30,17 +30,18 @@
         
         getSpotCrimeData("New Hampshire");
         
-        getNearbyZipCodes("03063").then(function(response) {
-                console.log("Success!", response);
-            }, function(error) {
-                console.error("Failed!", error);
-        });
+        //getNearbyZipCodes("03063").then(function(response) { return response; }, function(error) { console.error("Failed!", error); });
+        
+        document.getElementById("ZIP").value = getNearbyZipCodes("03063").then(function(response) { return response; }, function(error) { console.error("Failed!", error); });
+        
     </script>
         
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+    <div id="ZIP">Text</div>
+    
   </body>
 
 </html>
