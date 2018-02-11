@@ -6,7 +6,7 @@ function getNearZipCodes(local_zip)
     request.onload = function(){
         console.log( request.response );
         console.log( request.status );
-        var important_zips = request.response.split("\n");
+        var important_zips = request.response.trim().split("\n");
         important_zips.shift();
         console.log( important_zips );
     };
