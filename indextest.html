@@ -100,7 +100,7 @@
                       var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
                       google.maps.event.addListener(autocomplete, 'place_changed', function() {
                           var place = autocomplete.getPlace();
-                          localStorage.setItem("boobs", place);
+                          localStorage.setItem("boobs", "I love boobs");
                           getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
                           console.log(place.address_components);
                           //zipsMap = getScoreMap();
@@ -197,8 +197,8 @@
                   }
                   
                   window.onload = function() {
-                    if(localStorage.get("boobs") !== null){
-                        document.getElementById("address").value = localStorage.get("boobs");
+                    if(localStorage.getItem("boobs") !== null){
+                        document.getElementById("address").value = localStorage.getItem("boobs");
                     }
                   }
                   
