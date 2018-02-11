@@ -91,7 +91,7 @@
               <script>
                 var map;
                 var zipsMap = new Map();
-                zipsMap.set("01001", 100)
+                zipsMap.set("01001", 0)
                 var uluru = { lat: 43.1389, lng: -70.937 };
                 var marker;
                   function initMap() {
@@ -118,7 +118,7 @@
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v16");
+                      console.log("loading map shapes v18");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
@@ -130,16 +130,16 @@
                       });
                   }
 
-                  function rgb(r, g, b){
+                  function newrgb(r, g, b){
                     return "rgb("+r+","+g+","+b+")";
                   }
 
                   function styleFeature(feature) {
                       if(zipsMap.get(feature.getProperty("POSTCODE")) != undefined){
                         console.log("HELLO");
-                        var grayscale = 255 * ( parseInt(feature.getProperty("POSTCODE")) / 100 );
+                        var grayscale = 255 * ( zipsMap.get(feature.getProperty("POSTCODE")) / 100 );
                         console.log(grayscale);
-                        var rgb = rgb(grayscale, grayscale, grayscale);
+                        var rgb = newrgb(grayscale, grayscale, grayscale);
                         return {
                             strokeWeight: 0.5,
                             strokeColor: '#000000',
