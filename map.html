@@ -267,14 +267,14 @@
             // set the hover state so the setStyle function can change the border
             e.feature.setProperty('state', 'hover');
 
+            var percent = (e.feature.getProperty('census_variable') - censusMin) /
+                (censusMax - censusMin) * 100;
+
             var infowindow = new google.maps.InfoWindow({
-                content: e.feature.getProperty('census_variable').toLocaleString(),
+                content: info(e),
                 position: e.latLng
             });
             infowindow.open(map);
-
-            var percent = (e.feature.getProperty('census_variable') - censusMin) /
-                (censusMax - censusMin) * 100;
 
             // update the label
             document.getElementById('data-label').textContent =
@@ -294,6 +294,11 @@
         function mouseOutOfRegion(e) {
             // reset the hover state, returning the border to normal
             e.feature.setProperty('state', 'normal');
+        }
+
+        function info(e) {
+            return e.feature.getProperty('NAME'); + '\n' +
+                e.feature.getProperty('census_variable').toLocaleString();
         }
 
     </script>
