@@ -89,6 +89,12 @@
             <!--    Code for the map -->
             <div id="map"></div>
             <script>
+
+            var map;
+            var censusMin = Number.MAX_VALUE, censusMax = -Number.MAX_VALUE;
+            var infowindow;
+            var homescore, crime, commute, schools, overall;
+            
             function initMap() {
               var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
               google.maps.event.addListener(autocomplete, 'place_changed', function() {
