@@ -86,7 +86,9 @@
               <!--    Code for the map -->
               <div id="map"></div>
               <script>
-                var map;
+                  var map;
+                  var infowindow;
+
                   function initMap() {
                       var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
                       google.maps.event.addListener(autocomplete, 'place_changed', function() {
@@ -133,6 +135,35 @@
                           visible: true
                       };
                   }
+
+                  /**
+                    * Responds to the mouse-in event on a map shape (state).
+                    *
+                    * @param {?google.maps.MouseEvent} e
+                    */
+                  function mouseInToRegion(e) {
+                      try {
+                          //$(".gm-style-iw").parentElement.remove();
+                          infowindow.close();
+                      }
+                      catch (err) { }
+
+
+                      var content = "<b>" + e.feature.getProperty('NAME') + "</b><br/>Homescore: " +
+                           "<br/>Crime: " +
+                          "<br/>Commute:" +
+                          "<br/>School:" +
+                          "<br/><b>Overall:</b>";
+
+                      infowindow = new google.maps.InfoWindow({
+                          content: content,
+                          position: e.latLng
+                      });
+                      infowindow.open(map);
+
+                  }
+
+
               </script>
             </div>
           </div>
