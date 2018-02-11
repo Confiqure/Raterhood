@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+    <body>
     <!--    Crimespot test    -->
     <script type="text/javascript" src="js/api/abbrState.js"></script>
     <script type="text/javascript" src="js/api/crime.js"></script>
@@ -28,7 +29,12 @@
         }
         
         getSpotCrimeData("New Hampshire");
-        getNearZipCodes("03063");
+        
+        getNearZipCodes("03063").then(function(response) {
+                console.log("Success!", response);
+            }, function(error) {
+                console.error("Failed!", error);
+        });
     </script>
         
     <!-- Bootstrap core JavaScript -->
