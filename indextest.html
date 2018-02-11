@@ -103,11 +103,11 @@
                           getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
                           console.log(place.address_components);
                           //zipsMap = getScoreMap();
+                          $('.showMe').slideToggle('slow');
+                          google.maps.event.trigger(map,'resize');
                           map.setCenter({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           marker.setPosition({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           map.setZoom(12);
-                          $('.showMe').slideToggle('slow');
-                          google.maps.event.trigger(map,'resize');
                       });
 
                       map = new google.maps.Map(document.getElementById('map'), {
