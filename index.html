@@ -89,6 +89,8 @@
                     var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
                     google.maps.event.addListener(autocomplete, 'place_changed', function() {
                         var place = autocomplete.getPlace();
+                        console.log(place.geometry.location.lat());
+                        console.log(place.geometry.location.lng());
                         console.log(place.address_components);
                     });
 
@@ -206,15 +208,6 @@
 
     <!-- Custom scripts for this template -->
     <script src="js/creative.min.js"></script>
-    <script type="text/javascript">
-      $('#address').keypress(function (e) {
-        var key = e.which;
-        if (key == 13) {
-          alert($('#address').val());
-          return false;
-        }
-      });
-    </script>
 
   </body>
 
