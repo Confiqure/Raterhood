@@ -90,235 +90,250 @@
             <div id="map"></div>
             <script>
 
-            var map;
-            var censusMin = Number.MAX_VALUE, censusMax = -Number.MAX_VALUE;
-            var infowindow;
-            var homescore, crime, commute, schools, overall;
+                /*var mapStyle = [{
+                    'stylers': [{ 'visibility': 'off' }]
+                }, {
+                    'featureType': 'landscape',
+                    'elementType': 'geometry',
+                    'stylers': [{ 'visibility': 'on' }, { 'color': '#fcfcfc' }]
+                }, {
+                    'featureType': 'water',
+                    'elementType': 'geometry',
+                    'stylers': [{ 'visibility': 'on' }, { 'color': '#bfd4ff' }]
+                }];*/
+                var map;
+                var censusMin = Number.MAX_VALUE, censusMax = -Number.MAX_VALUE;
+                var infowindow;
+                var homescore, crime, commute, schools, overall;
 
-            function initMap() {
-              var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
-              google.maps.event.addListener(autocomplete, 'place_changed', function() {
-                var place = autocomplete.getPlace();
-                getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
-                console.log(place.address_components);
-                $('.showMe').slideToggle('slow');
-              });
+                function initMap() {
 
-              var lat = 42.3601;
-              var lng = -71.0589;
-              var uluru = { lat: lat, lng: lng };
-              // load the map
-              map = new google.maps.Map(document.getElementById('map'), {
-                  center: uluru,
-                  zoom: 12,
-                  //styles: mapStyle
-              });
-              map.setOptions({ minZoom: 12, maxZoom: 15 });
+                  var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
+                  google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                    var place = autocomplete.getPlace();
+                    getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
+                    console.log(place.address_components);
+                    $('.showMe').slideToggle('slow');
+                  });
 
-              var marker = new google.maps.Marker({
-                  position: uluru,
-                  map: map
-              });
+                    var lat = 42.3601;
+                    var lng = -71.0589;
+                    var uluru = { lat: lat, lng: lng };
+                    // load the map
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: uluru,
+                        zoom: 12,
+                        //styles: mapStyle
+                    });
+                    map.setOptions({ minZoom: 12, maxZoom: 15 });
 
-              // set up the style rules and events for google.maps.Data
-              map.data.setStyle(styleFeature);
-              map.data.addListener('click', mouseInToRegion);
-
-              // wire up the button
-              var selectBox = document.getElementById('census-variable');
-              google.maps.event.addDomListener(selectBox, 'change', function () {
-                  clearCensusData();
-                  loadCensusData(selectBox.options[selectBox.selectedIndex].value);
-              });
-
-              // state polygons only need to be loaded once, do them now
-              loadMapShapes();
-            }
-
-            /** Loads the state boundary polygons from a GeoJSON source. */
-            function loadMapShapes() {
-                // load US state outline polygons from a GeoJson file
-                map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
-
-                // wait for the request to complete by listening for the first feature to be
-                // added
-                google.maps.event.addListenerOnce(map.data, 'addfeature', function () {
-                    google.maps.event.trigger(document.getElementById('census-variable'),
-                        'change');
-                });
-            }
-
-            //bigScoreFunction
-            function setScores(zips){
-              var scoreMap = new Map();
-              for( var i = 0; i < zips.length; i++ ){
-                var homeScore = getHomeScore(zips[i]);
-                //var crimeScore = getHomeScore(zips[i]);
-                //var commuteScore = getCommuteScore(zips[i]);
-                var bigScore = computeBigScore(homeScore);
-                scoreMap.set(zips[i], bigScore);
-              }
-            }
-
-            //computeBigScore
-            function computeBigScore(homeScore){
-              return homeScore;
-            }
-
-            //function to return a latlong pair from a zipcode
-            function getLatLongFromZip(zipcode){
-              var request = new XMLHttpRequest();
-              var requestURL = "http://maps.googleapis.com/maps/api/geocode/json?address=" + zipcode;
-              var latLong = [];
-              request.open("GET", requestURL);
-              request.onload = function(){
-                var responseJSON = JSON.parse(request.responseText);
-                latLong.push(['results'][0]['geometry']['location']['lat']);
-                latLong.push(['results'][0]['geometry']['location']['lng']);
-                return latLong;
-              };
-            }
-
-            /**
-             * Loads the census data from a simulated API call to the US Census API.
-             *
-             * @param {string} variable
-             */
-            function loadCensusData(variable) {
-                // load the requested variable from the census API (using local copies)
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', variable + '.json');
-                xhr.onload = function () {
-                    var censusData = JSON.parse(xhr.responseText);
-                    censusData.shift(); // the first row contains column names
-                    censusData.forEach(function (row) {
-                        var censusVariable = parseFloat(row[0]);
-                        var stateId = row[1];
-
-                        // keep track of min and max values
-                        if (censusVariable < censusMin) {
-                            censusMin = censusVariable;
-                        }
-                        if (censusVariable > censusMax) {
-                            censusMax = censusVariable;
-                        }
-
-                        // update the existing row with the new data
-                        map.data
-                            .getFeatureById(stateId)
-                            .setProperty('census_variable', censusVariable);
+                    var marker = new google.maps.Marker({
+                        position: uluru,
+                        map: map
                     });
 
-                    // update and display the legend
-                    document.getElementById('census-min').textContent =
-                        censusMin.toLocaleString();
-                    document.getElementById('census-max').textContent =
-                        censusMax.toLocaleString();
-                };
-                xhr.send();
-            }
+                    // set up the style rules and events for google.maps.Data
+                    map.data.setStyle(styleFeature);
+                    map.data.addListener('click', mouseInToRegion);
 
-            /** Removes census data from each shape on the map and resets the UI. */
-            function clearCensusData() {
-                censusMin = Number.MAX_VALUE;
-                censusMax = -Number.MAX_VALUE;
-                map.data.forEach(function (row) {
-                    row.setProperty('census_variable', undefined);
-                });
-                //document.getElementById('data-box').style.display = 'none';
-                document.getElementById('data-caret').style.display = 'none';
-            }
+                    // wire up the button
+                    var selectBox = document.getElementById('census-variable');
+                    google.maps.event.addDomListener(selectBox, 'change', function () {
+                        clearCensusData();
+                        loadCensusData(selectBox.options[selectBox.selectedIndex].value);
+                    });
 
-            /**
-             * Applies a gradient style based on the 'census_variable' column.
-             * This is the callback passed to data.setStyle() and is called for each row in
-             * the data set.  Check out the docs for Data.StylingFunction.
-             *
-             * @param {google.maps.Data.Feature} feature
-             */
-            function styleFeature(feature) {
-                var low = [5, 69, 54];  // color of smallest datum
-                var high = [151, 83, 34];   // color of largest datum
-
-                // delta represents where the value sits between the min and max
-                var delta = (feature.getProperty('census_variable') - censusMin) /
-                    (censusMax - censusMin);
-
-                var color = [];
-                for (var i = 0; i < 3; i++) {
-                    // calculate an integer color based on the delta
-                    color[i] = (high[i] - low[i]) * delta + low[i];
+                    // state polygons only need to be loaded once, do them now
+                    loadMapShapes();
                 }
 
-                // determine whether to show this shape or not
-                var showRow = true;
-                if (feature.getProperty('census_variable') == null ||
-                    isNaN(feature.getProperty('census_variable'))) {
-                    color[0] = 255;
-                    color[1] = 255;
-                    color[2] = 255;
-        //            showRow = false;
+                /** Loads the state boundary polygons from a GeoJSON source. */
+                function loadMapShapes() {
+                    // load US state outline polygons from a GeoJson file
+                    map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
+
+                    // wait for the request to complete by listening for the first feature to be
+                    // added
+                    google.maps.event.addListenerOnce(map.data, 'addfeature', function () {
+                        google.maps.event.trigger(document.getElementById('census-variable'),
+                            'change');
+                    });
                 }
 
-                var outlineWeight = 0.5, zIndex = 1;
-                if (feature.getProperty('state') === 'hover') {
-                    outlineWeight = zIndex = 2;
+                //bigScoreFunction
+                function setScores(zips){
+                  var scoreMap = new Map();
+                  for( var i = 0; i < zips.length; i++ ){
+                    var homeScore = getHomeScore(zips[i]);
+                    //var crimeScore = getHomeScore(zips[i]);
+                    //var commuteScore = getCommuteScore(zips[i]);
+                    var bigScore = computeBigScore(homeScore);
+                    scoreMap.set(zips[i], bigScore);
+                  }
                 }
 
-                return {
-                    strokeWeight: outlineWeight,
-                    strokeColor: '#000000',
-                    zIndex: zIndex,
-                    fillColor: 'hsl(' + color[0] + ',' + color[1] + '%,' + color[2] + '%)',
-                    fillOpacity: 0.5,
-                    visible: showRow
-                };
-            }
-
-            /**
-             * Responds to the mouse-in event on a map shape (state).
-             *
-             * @param {?google.maps.MouseEvent} e
-             */
-            function mouseInToRegion(e) {
-                try {
-                    //$(".gm-style-iw").parentElement.remove();
-                    infowindow.close();
+                //computeBigScore
+                function computeBigScore(homeScore){
+                  return homeScore;
                 }
-                catch (err) {}
 
-                var percent = (e.feature.getProperty('census_variable') - censusMin) /
-                    (censusMax - censusMin) * 100;
+                //function to return a latlong pair from a zipcode
+                function getLatLongFromZip(zipcode){
+                  var request = new XMLHttpRequest();
+                  var requestURL = "http://maps.googleapis.com/maps/api/geocode/json?address=" + zipcode;
+                  var latLong = [];
+                  request.open("GET", requestURL);
+                  request.onload = function(){
+                    var responseJSON = JSON.parse(request.responseText);
+                    latLong.push(['results'][0]['geometry']['location']['lat']);
+                    latLong.push(['results'][0]['geometry']['location']['lng']);
+                    return latLong;
+                  };
+                }
 
-                var content = "<b>" + e.feature.getProperty('NAME') + "</b><br/>Homescore: " +
-                    e.feature.getProperty('census_variable').toLocaleString() + "<br/>Crime: " +
-                    "<br/>Commute:" + "<br/>School:" + "<br/><b>Overall:</b>";
+                /**
+                 * Loads the census data from a simulated API call to the US Census API.
+                 *
+                 * @param {string} variable
+                 */
+                function loadCensusData(variable) {
+                    // load the requested variable from the census API (using local copies)
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', variable + '.json');
+                    xhr.onload = function () {
+                        var censusData = JSON.parse(xhr.responseText);
+                        censusData.shift(); // the first row contains column names
+                        censusData.forEach(function (row) {
+                            var censusVariable = parseFloat(row[0]);
+                            var stateId = row[1];
 
-                infowindow = new google.maps.InfoWindow({
-                    content: content,
-                    position: e.latLng
-                });
-                infowindow.open(map);
+                            // keep track of min and max values
+                            if (censusVariable < censusMin) {
+                                censusMin = censusVariable;
+                            }
+                            if (censusVariable > censusMax) {
+                                censusMax = censusVariable;
+                            }
 
-                // update the label
-                //document.getElementById('data-label').textContent =
-                  //  e.feature.getProperty('NAME');
-                //document.getElementById('data-value').textContent =
-                  //  e.feature.getProperty('census_variable').toLocaleString();
-                //document.getElementById('data-box').style.display = 'block';
-                //document.getElementById('data-caret').style.display = 'block';
-                //document.getElementById('data-caret').style.paddingLeft = percent + '%';
-            }
-            /** Computes the overall metric score.
-             *
-             * @param hs
-             * @param cr
-             * @param cm
-             * @param sc
-             */
-            function computeOverall(hs, cr, cm, sc) {
-                return (hs * .35) + (cr * .25) + (cm * .25) + (sc * .15);
-            }
+                            // update the existing row with the new data
+                            map.data
+                                .getFeatureById(stateId)
+                                .setProperty('census_variable', censusVariable);
+                        });
+
+                        // update and display the legend
+                        document.getElementById('census-min').textContent =
+                            censusMin.toLocaleString();
+                        document.getElementById('census-max').textContent =
+                            censusMax.toLocaleString();
+                    };
+                    xhr.send();
+                }
+
+                /** Removes census data from each shape on the map and resets the UI. */
+                function clearCensusData() {
+                    censusMin = Number.MAX_VALUE;
+                    censusMax = -Number.MAX_VALUE;
+                    map.data.forEach(function (row) {
+                        row.setProperty('census_variable', undefined);
+                    });
+                    //document.getElementById('data-box').style.display = 'none';
+                    document.getElementById('data-caret').style.display = 'none';
+                }
+
+                /**
+                 * Applies a gradient style based on the 'census_variable' column.
+                 * This is the callback passed to data.setStyle() and is called for each row in
+                 * the data set.  Check out the docs for Data.StylingFunction.
+                 *
+                 * @param {google.maps.Data.Feature} feature
+                 */
+                function styleFeature(feature) {
+                    var low = [5, 69, 54];  // color of smallest datum
+                    var high = [151, 83, 34];   // color of largest datum
+
+                    // delta represents where the value sits between the min and max
+                    var delta = (feature.getProperty('census_variable') - censusMin) /
+                        (censusMax - censusMin);
+
+                    var color = [];
+                    for (var i = 0; i < 3; i++) {
+                        // calculate an integer color based on the delta
+                        color[i] = (high[i] - low[i]) * delta + low[i];
+                    }
+
+                    // determine whether to show this shape or not
+                    var showRow = true;
+                    if (feature.getProperty('census_variable') == null ||
+                        isNaN(feature.getProperty('census_variable'))) {
+                        color[0] = 255;
+                        color[1] = 255;
+                        color[2] = 255;
+            //            showRow = false;
+                    }
+
+                    var outlineWeight = 0.5, zIndex = 1;
+                    if (feature.getProperty('state') === 'hover') {
+                        outlineWeight = zIndex = 2;
+                    }
+
+                    return {
+                        strokeWeight: outlineWeight,
+                        strokeColor: '#000000',
+                        zIndex: zIndex,
+                        fillColor: 'hsl(' + color[0] + ',' + color[1] + '%,' + color[2] + '%)',
+                        fillOpacity: 0.5,
+                        visible: showRow
+                    };
+                }
+
+                /**
+                 * Responds to the mouse-in event on a map shape (state).
+                 *
+                 * @param {?google.maps.MouseEvent} e
+                 */
+                function mouseInToRegion(e) {
+                    try {
+                        //$(".gm-style-iw").parentElement.remove();
+                        infowindow.close();
+                    }
+                    catch (err) {}
+
+                    var percent = (e.feature.getProperty('census_variable') - censusMin) /
+                        (censusMax - censusMin) * 100;
+
+                    var content = "<b>" + e.feature.getProperty('NAME') + "</b><br/>Homescore: " +
+                        e.feature.getProperty('census_variable').toLocaleString() + "<br/>Crime: " +
+                        "<br/>Commute:" + "<br/>School:" + "<br/><b>Overall:</b>";
+
+                    infowindow = new google.maps.InfoWindow({
+                        content: content,
+                        position: e.latLng
+                    });
+                    infowindow.open(map);
+
+                    // update the label
+                    //document.getElementById('data-label').textContent =
+                      //  e.feature.getProperty('NAME');
+                    //document.getElementById('data-value').textContent =
+                      //  e.feature.getProperty('census_variable').toLocaleString();
+                    //document.getElementById('data-box').style.display = 'block';
+                    //document.getElementById('data-caret').style.display = 'block';
+                    //document.getElementById('data-caret').style.paddingLeft = percent + '%';
+                }
+                /** Computes the overall metric score.
+                 *
+                 * @param hs
+                 * @param cr
+                 * @param cm
+                 * @param sc
+                 */
+                function computeOverall(hs, cr, cm, sc) {
+                    return (hs * .35) + (cr * .25) + (cm * .25) + (sc * .15);
+                }
+
+
+
             </script>
           </div>
         </div>
