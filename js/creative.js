@@ -57,11 +57,6 @@
     distance: '0px'
   }, 300);
 
-  //expand maps
-  $('.expandContent').click(function(){
-      $('.showMe').slideToggle('slow');;
-  });
-
   // Magnific popup calls
   $('.popup-gallery').magnificPopup({
     delegate: 'a',

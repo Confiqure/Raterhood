@@ -95,7 +95,7 @@
                           var place = autocomplete.getPlace();
                           getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
                           console.log(place.address_components);
-                          $('.showMe').show();
+                          $('.showMe').slideToggle('slow');
                       });
 
                       var uluru = { lat: 43.1389, lng: -70.937 };
