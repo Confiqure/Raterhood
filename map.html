@@ -185,8 +185,10 @@
                     if (censusVariable > censusMax) {
                         censusMax = censusVariable;
                     }
-                    if (censusVariable == null)
+                    if (censusVariable == null ||
+                        isNaN(censusVariable)) {
                         censusVariable = 0;
+                    }
                     // update the existing row with the new data
                     map.data
                         .getFeatureById(stateId)
