@@ -118,8 +118,6 @@
                                 if(( latitude !== null) && (longitude !== null ))
                                 {
                                     setLocalZip( latitude, longitude );
-                                    local_zip = localStorage.getItem("local_zip");
-                                    localStorage.removeItem("local_zip");
                                 }
                             }
                             console.log( place );
@@ -141,6 +139,7 @@
                                     console.log("Success!", response);
                                     for( i=0; i < response.length; i++ ) {
                                         console.log( response[i] );
+                                        
                                         homeScore( latitude, longitude, response[i] );
                                         //count = 0;
                                         //while(( localStorage.getItem("homeScore_" + response[i]) === null )&&(count <= 10)){ setTimeout(function(){ console.log( "WAITING..!" ); }, 50); count += 1; }
@@ -307,7 +306,6 @@
                                 }
                                 console.log( solution );
                                 local_zip = String(solution);
-                                localStorage.setItem("local_zip", String(solution));
                             }
                         };
                         request.send();
