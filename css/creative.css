@@ -38,6 +38,10 @@ h6 {
   font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
 }
 
+.pac-container {
+    z-index: 1051 !important;
+}
+
 .bg-primary {
   background-color: #0dba7b !important;
 }
