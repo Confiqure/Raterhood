@@ -103,10 +103,11 @@
                           getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
                           console.log(place.address_components);
                           //zipsMap = getScoreMap();
-                          $('.showMe').slideToggle('slow');
                           map.setCenter({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           marker.setPosition({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           map.setZoom(12);
+                          $('.showMe').slideToggle('slow');
+                          google.maps.event.trigger(map,'resize');
                       });
 
                       map = new google.maps.Map(document.getElementById('map'), {
@@ -123,7 +124,7 @@
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v22");
+                      console.log("loading map shapes v23");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
