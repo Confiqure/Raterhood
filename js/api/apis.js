@@ -15,8 +15,8 @@ function getLatLongFromZip(zipcode){
             if (request.status === 200) {
                 var responseJSON = JSON.parse(request.responseText);
                 console.log( responseJSON );
-                latLong.push(['results'][0]['geometry']['location']['lat']);
-                latLong.push(['results'][0]['geometry']['location']['lng']);
+                latLong.push(responseJSON['results'][0]['geometry']['location']['lat']);
+                latLong.push(responseJSON['results'][0]['geometry']['location']['lng']);
                 console.log( responseJSON );
                 resolve(latLong);
             }
