@@ -17,14 +17,16 @@
             request.onload = function(){
                 console.log( request.response );
                 console.log( request.status );
-                var relevant_data = request.response["results"][-1];
-                console.log( relevant_data );
+                var json_data = JSON.parse( request.response );
+                var length = (json_data['results'].length);
+                var relevant_data = json_data['results'][length-1];
+                
+                var total_crimes = relevant_data['aggravated_assault'] + relevant_data['burglary']
+                console.log( total_crimes );
             };
             
             request.send();
             
-            var relevant_data = request.response["results"][-1];
-            console.log( request.response );
             
             /*
             $.ajax({
@@ -55,7 +57,7 @@
         
         window.onload = function() {
             //document.getElementById("spotCrimeData").value = getSpotCrimeData();
-            getSpotCrimeData();
+            getSpotCrimeData("New Hampshire");
         };
         
     </script>
