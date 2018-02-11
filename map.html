@@ -118,7 +118,6 @@
         var censusMin = Number.MAX_VALUE, censusMax = -Number.MAX_VALUE;
         var infowindow;
 
-
         function initMap() {
 
             // load the map
@@ -128,11 +127,14 @@
                 styles: mapStyle
             });
 
+            var marker = new google.maps.Marker({
+                position: lat: 43.1389, lng: -70.937,
+                map: map
+            });
 
             // set up the style rules and events for google.maps.Data
             map.data.setStyle(styleFeature);
             map.data.addListener('click', mouseInToRegion);
-            
 
             // wire up the button
             var selectBox = document.getElementById('census-variable');
@@ -267,7 +269,8 @@
                 (censusMax - censusMin) * 100;
 
             var content = "<b>" + e.feature.getProperty('NAME') + "</b><br/>Homescore: " +
-                e.feature.getProperty('census_variable').toLocaleString() + "<br/>Crime: ";
+                e.feature.getProperty('census_variable').toLocaleString() + "<br/>Crime: " +
+                "<br/>Commute:" + "<br/>School:" + "<br/><b>Overall:</b>";
 
             infowindow = new google.maps.InfoWindow({
                 content: content,
