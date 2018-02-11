@@ -117,8 +117,10 @@
                                 longitude = String(place.geometry.location.lng());
                                 if(( latitude !== null) && (longitude !== null ))
                                 {
+                                    console.log("Latitude & Longitude", latitude, longitude);
                                     setLocalZip( latitude, longitude );
                                     local_zip = localStorage.getItem("local_zip");
+                                    console.log("LocalZip: ", local_zip);
                                     localStorage.removeItem("local_zip");
                                 }
                             }
@@ -140,11 +142,15 @@
                                     console.log("ZIP IS: ", local_zip);
                                     console.log("Success!", response);
                                     for( i=0; i < response.length; i++ ) {
-                                        console.log( response[i] );
-                                        homeScore( latitude, longitude, response[i] );
-                                        //count = 0;
-                                        //while(( localStorage.getItem("homeScore_" + response[i]) === null )&&(count <= 10)){ setTimeout(function(){ console.log( "WAITING..!" ); }, 50); count += 1; }
-
+                                        console.log( "Current analyzed zip", response[i] );
+                                        getLatLongFromZip(response[i]).then(function(res) {
+                                            homeScore( res[0], res[1], response[i] );
+                                            //count = 0;
+                                            //while(( localStorage.getItem("homeScore_" + response[i]) === null )&&(count <= 10)){ setTimeout(function(){ console.log( "WAITING..!" ); }, 50); count += 1; }
+                                            console.log( "Final Score:", zipsMap[response[i]] );
+                                            }, function(error) {
+                                            console.error("Failed!", error);
+                                            });
 
                                     }
                                     //localStorage.removeItem("lat");
@@ -175,7 +181,7 @@
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v37");
+                      console.log("loading map shapes v38");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
@@ -229,8 +235,7 @@
                       catch (err) { }
 
 
-                      var content = "<b>" + e.feature.getProperty('PC_NAME') +
-                          "</b><br/>Homescore: " +
+                      var content = "<b>" + e.feature.getProperty('PC_NAME') + "</b><br/>Homescore: " +
                           "<br/>Crime: " +
                           "<br/>Commute:" +
                           "<br/>School:" +
@@ -262,7 +267,6 @@
                             request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + lat + '&lon=' + lng + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F');
                             var solution = [];
                             request.onload = function(){
-                              console.log(request.responseText);
                                 if (request.status === 200) {
                                     var json_data = JSON.parse( request.responseText );
                                     solution = parseInt(json_data['totalHomeScores']['safety']['value']) * 0.7;
@@ -279,9 +283,8 @@
                                     console.log("Homescore FAILED");
                                     console.log(request.status + request.responseText);
                                 }
+                        request.send();
                       };
-
-                      request.send();
                     }
 
                     function setLocalZip(lat, lng)
