@@ -268,7 +268,7 @@
             e.feature.setProperty('state', 'hover');
 
             var infowindow = new google.maps.InfoWindow({
-                content: 'Change the zoom level',
+                content: e.feature.getProperty('census_variable').toLocaleString(),
                 position: e.latLng
             });
             infowindow.open(map);
