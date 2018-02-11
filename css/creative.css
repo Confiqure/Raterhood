@@ -26,7 +26,7 @@ a {
 }
 
 a:hover {
-  color: #0dba7b;
+  color: #fff;
 }
 
 h1,
@@ -51,7 +51,7 @@ h6 {
 }
 
 .text-faded {
-  color: rgba(255, 255, 255, 0.7);
+  color: #fff;
 }
 
 section {
@@ -134,7 +134,7 @@ img::-moz-selection {
     background-color: transparent;
   }
   #mainNav .navbar-brand {
-    color: rgba(255, 255, 255, 0.7);
+    color: #fff;
   }
   #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
     color: #fff;
@@ -144,7 +144,7 @@ img::-moz-selection {
   }
   #mainNav .navbar-nav > li.nav-item > a.nav-link,
   #mainNav .navbar-nav > li.nav-item > a.nav-link:focus {
-    color: rgba(255, 255, 255, 0.7);
+    color: #fff;
   }
   #mainNav .navbar-nav > li.nav-item > a.nav-link:hover,
   #mainNav .navbar-nav > li.nav-item > a.nav-link:focus:hover {
@@ -166,14 +166,12 @@ img::-moz-selection {
   }
   #mainNav.navbar-shrink .navbar-nav > li.nav-item > a.nav-link:hover,
   #mainNav.navbar-shrink .navbar-nav > li.nav-item > a.nav-link:focus:hover {
-    color: #0dba7b;
+    color: #fff;
   }
 }
 
 .logo {
-  width: 100px;
-  height: 100px;
-  fill: #0dba7b;
+  padding-right: 50px;
 }
 
 header.masthead {
@@ -274,7 +272,7 @@ header.masthead p {
   font-size: 18px;
 }
 
-.portfolio-box:hover .portfolio-box-caption {
+.portfolio-box: .portfolio-box-caption {
   opacity: 1;
 }
 
@@ -312,7 +310,7 @@ header.masthead p {
   border-color: #0dba7b;
 }
 
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+.btn-primary:, .btn-primary:focus, .btn-primary:active {
   color: #fff;
   background-color: #ee4b28 !important;
 }
