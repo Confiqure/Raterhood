@@ -108,7 +108,7 @@
                           google.maps.event.trigger(map,'resize');
                           map.setCenter({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           marker.setPosition({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
-                          map.setZoom(12);
+                          map.setZoom(14);
                           $('html, body').animate({
                               scrollTop: $(".showMe").offset().top - 62
                           }, 2000);
@@ -118,10 +118,12 @@
                           zoom: 12,
                           center: uluru
                       });
+
                       marker = new google.maps.Marker({
                           position: uluru,
                           map: map
                       });
+                      map.setOptions({ minZoom: 14, maxZoom: 17 });
                       map.data.setStyle(styleFeature);
                       map.data.addListener('click', mouseInToRegion);
                       loadMapShapes();
