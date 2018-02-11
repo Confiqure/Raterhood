@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-
 function getLatLongFromZip(zipcode){
     return new Promise(function(resolve, reject) {
         var request = new XMLHttpRequest();
@@ -123,17 +122,14 @@ function getHomeScore(latLong)
 {
     return new Promise(function(resolve, reject) {
         var request = new XMLHttpRequest();
-        request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + lat + '&lon=' + lon + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F');
+        request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + latLong[0] + '&lon=' + latLong[1] + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F');
         var solution = [];
         request.onload = function(){
             if (request.status === 200) {
                 var json_data = JSON.parse( request.response );
-                console.log( request.response );
-                console.log( json_data );
-                //console.log('quiet: ' + data.totalHomeScores.quiet.value);
-                //console.log('safety: ' + data.totalHomeScores.safety.value);
-                solution.push(responseJSON['data']['totalHomeScores']['quiet']);
-                solution.push(responseJSON['data']['totalHomeScores']['quiet']);
+                solution = (json_data['totalHomeScores']['safety']['value'] * 0.7);
+                solution += (json_data['totalHomeScores']['quiet']['value'] * 0.3);
+                console.log( solution );
                 resolve(solution);
             }
             else {
