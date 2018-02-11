@@ -67,7 +67,7 @@
         <div class="row">
           <div class="col-lg-10 mx-auto">
             <h1 class="text-uppercase">
-              <strong>Raterhood is using blockchain and neural network technologies and the internet of things to disrupt hoods everywhere</strong>
+              <strong>Raterhood provides families a powerful neighbourhood search and comparison tool</strong>
             </h1>
             <hr>
           </div>
@@ -142,17 +142,17 @@
                                     console.log("Success!", response);
                                     for( i=0; i < response.length; i++ ) {
                                         console.log( response[i] );
-                                        
+
                                         setTimeout(getLatLongFromZip(response[i]).then(function(res) {
                                                 console.log( res );
                                                 homeScore( res[0], res[1], res[2] );
                                                 }, function(error) {
                                                     console.error("Failed!", error);
                                             }), 1000);
-                                            
-                                        
-                                        
-                                        
+
+
+
+
                                         //count = 0;
                                         //while(( localStorage.getItem("homeScore_" + response[i]) === null )&&(count <= 10)){ setTimeout(function(){ console.log( "WAITING..!" ); }, 50); count += 1; }
 
@@ -240,15 +240,15 @@
                       }
                       catch (err) { }
                       var cursor = e.latLng;
-                      
+
                       setTempZip( cursor.lat, cursor.lng ).then(function(res) {
                             console.log(res);
                             console.log(temp_zip);
                             console.log(zipsMap.get(temp_zip));
-                            
+
                             var content = "<b>" + e.feature.getProperty('PC_NAME') +
                                 "</b><br/>Homescore: "+ zipsMap.get(temp_zip); ;
-                            
+
                             console.log(content);
 
                             infowindow = new google.maps.InfoWindow({
@@ -332,7 +332,7 @@
                         };
                         request.send();
                     }
-                    
+
                     function setTempZip(lat, lng)
                     {
                         return new Promise(function(resolve, reject) {
@@ -386,7 +386,7 @@
                   <div class="col-lg-8 mx-auto text-center">
                       <h2 class="section-heading text-white">About the Project!</h2>
                       <hr class="light my-4">
-                      <p class="text-faded mb-4">Raterhood calculates and displays ratings of neighbourhoods close to your work. Raterhood is great for soon-to-be home buyers, or even people that are just looking for a change of scenery.</p>
+                      <p class="text-faded mb-4">Raterhood provides families a powerful neighbourhood search and comparison tool responsively designed for any platform that can be customized to their specific needs seamlessly integrating several of the internet’s most powerful APIs. Raterhood calculates and displays ratings of neighbourhoods close to your work using a proprietary Raterhood Score equation. Raterhood is great for soon-to-be home buyers, or even people that are just looking for a change of scenery. Raterhood has been designed from the ground-up with the family in mind, providing an intuitive user interface and data explorer.</p>
                   </div>
               </div>
           </div>
