@@ -191,7 +191,8 @@
                         map.data
                             .getFeatureById(stateId)
                             .setProperty('census_variable', censusVariable);
-                    } catch ( err ) {
+                    } catch (err) {
+                        censusVariable = 0;
                         map.data
                             .getFeatureById(stateId)
                             .setProperty('census_variable', 0);
