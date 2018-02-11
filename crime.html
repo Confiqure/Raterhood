@@ -12,13 +12,23 @@
                 console.error("Failed!", error);
         });
         
+        getLatLongFromZip("03063").then(function(response) {
+                console.log("Success!", response);
+            }, function(error) {
+                console.error("Failed!", error);
+        });
+        
         getNearbyZipCodes("03063").then(function(response) {
                 console.log("Success!", response);
             }, function(error) {
                 console.error("Failed!", error);
         });
         
-        getStateFromZip("03063");
+        getStateFromZip("03063").then(function(response) {
+                console.log("Success!", response);
+            }, function(error) {
+                console.error("Failed!", error);
+        });
         
     </script>
         

@@ -6,31 +6,58 @@
 
 
 function getLatLongFromZip(zipcode){
-  var request = new XMLHttpRequest();
-  var requestURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + zipcode;
-  var latLong = [];
-  request.open("GET", requestURL);
-  request.onload = function(){
-    var responseJSON = JSON.parse(request.responseText);
-    latLong.push(['results'][0]['geometry']['location']['lat']);
-    latLong.push(['results'][0]['geometry']['location']['lng']);
-    return latLong;
-  };
-  request.send();
+    return new Promise(function(resolve, reject) {
+        var request = new XMLHttpRequest();
+        var requestURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + zipcode;
+        var latLong = [];
+        request.open("GET", requestURL);
+        request.onload = function(){
+            if (request.status === 200) {
+                var responseJSON = JSON.parse(request.responseText);
+                console.log( responseJSON );
+                latLong.push(['results'][0]['geometry']['location']['lat']);
+                latLong.push(['results'][0]['geometry']['location']['lng']);
+                console.log( responseJSON );
+                resolve(latLong);
+            }
+            else {
+            // Otherwise reject with the status text
+            // which will hopefully be a meaningful error
+                reject(Error(request.statusText));
+            }
+        };
+        request.onerror = function() {
+            reject(Error("Network Error"));
+        };
+        request.send();
+    });
 }
 
-function getStateFromZip(zipcode){
-  var request = new XMLHttpRequest();
-  var requestURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + zipcode;
-  var state;
-  request.open("GET", requestURL);
-  request.onload = function(){
-    var responseJSON = JSON.parse(request.responseText);
-    state = responseJSON['results'][0]['address_components'][3]['long_name'];
-    console.log( state );
-    return state;
-  };
-  request.send();
+function getStateFromZip(zipcode)
+{
+    return new Promise(function(resolve, reject) {
+        var request = new XMLHttpRequest();
+        var requestURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + zipcode;
+        var state;
+        request.open("GET", requestURL);
+        request.onload = function(){
+            if (request.status === 200) {
+                var responseJSON = JSON.parse(request.responseText);
+                state = responseJSON['results'][0]['address_components'][3]['long_name'];
+                console.log( state );
+                resolve(state);
+            }
+            else {
+            // Otherwise reject with the status text
+            // which will hopefully be a meaningful error
+                reject(Error(request.statusText));
+            }
+        };
+        request.onerror = function() {
+            reject(Error("Network Error"));
+        };
+        request.send();
+    });
 }
 
 function getNearbyZipCodes(local_zip)
