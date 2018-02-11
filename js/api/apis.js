@@ -6,6 +6,7 @@
 
 function getLatLongFromZip(zipcode){
     return new Promise(function(resolve, reject) {
+        console.log( "Pushing ZIP to getLatLong: ", zipcode );
         var request = new XMLHttpRequest();
         var requestURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + zipcode;
         var latLong = [];
@@ -16,8 +17,9 @@ function getLatLongFromZip(zipcode){
                 console.log( responseJSON );
                 latLong.push(responseJSON['results'][0]['geometry']['location']['lat']);
                 latLong.push(responseJSON['results'][0]['geometry']['location']['lng']);
-                console.log( responseJSON );
-                resolve(latLong, zipcode);
+                console.log( zipcode );
+                latLong.push( zipcode );
+                resolve(latLong);
             }
             else {
             // Otherwise reject with the status text
@@ -64,7 +66,7 @@ function getNearbyZipCodes(local_zip)
     return new Promise(function(resolve, reject) {
     var request = new XMLHttpRequest();
     var miles = 5;
-    request.open( 'GET', 'https://www.zipcodeapi.com/rest/js-CtWbb88c4rVoBycY3MfAMMBW4wLaWvJzjPF1D5sxMXoiL8ykz5JFYa5cbQLM2mkG/radius.csv/'+String(local_zip)+'/'+miles+'/miles?minimal');
+    request.open( 'GET', 'https://www.zipcodeapi.com/rest/js-n9zRAwaogd9prO7mw6w1MyPpZypFoyzR1kglY7f1ySmK84BXYelR2JA5rglwnPKh/radius.csv/'+String(local_zip)+'/'+miles+'/miles?minimal');
     request.onload = function(){
         if (request.status === 200) {
             // Resolve the promise with the response text

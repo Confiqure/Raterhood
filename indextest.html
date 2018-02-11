@@ -142,9 +142,12 @@
                                     for( i=0; i < response.length; i++ ) {
                                         console.log( response[i] );
                                         
-                                        getLatLongFromZip(response[i]).then(function(res, zip) {
+                                        count = 0;
+                                        while(count <= 10){ setTimeout(function(){ console.log( "WAITING..!" ); }, 100); count += 1; }
+
+                                        getLatLongFromZip(response[i]).then(function(res) {
                                             console.log( res );
-                                            homeScore( res[0], res[1], response[i] );
+                                            homeScore( res[0], res[1], res[2] );
                                             }, function(error) {
                                                 console.error("Failed!", error);
                                         });
@@ -184,7 +187,7 @@
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v40");
+                      console.log("loading map shapes v43");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
