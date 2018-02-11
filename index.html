@@ -107,7 +107,7 @@
                           position: uluru,
                           map: map
                       });
-
+                      map.data.setStyle(styleFeature);
                       loadMapShapes();
                   }
 
@@ -122,6 +122,18 @@
                           google.maps.event.trigger(document.getElementById('census-variable'),
                               'change');
                       });
+                  }
+
+                  function styleFeature(feature) {
+
+                      return {
+                          strokeWeight: outlineWeight,
+                          strokeColor: '#000000',
+                          zIndex: zIndex,
+                          fillColor: '#fff',
+                          fillOpacity: 0.5,
+                          visible: showRow
+                      };
                   }
               </script>
             </div>
