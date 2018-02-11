@@ -90,35 +90,55 @@
               <div id="map"></div>
               <script>
                 var map;
-                var location = { lat: 42, lng: -71 };;
-                var marker;
+                var uluru = { lat: 43.1389, lng: -70.937 };
                   function initMap() {
                       var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
                       google.maps.event.addListener(autocomplete, 'place_changed', function() {
                           var place = autocomplete.getPlace();
                           getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
-                          location = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() };
-                          map.setCenter(location);
-                          marker.setPosition(location);
+                          map.setCenter({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           console.log(place.address_components);
                           $('.showMe').slideToggle('slow');
                       });
 
                       map = new google.maps.Map(document.getElementById('map'), {
                           zoom: 4,
-                          center: location
+                          center: uluru
                       });
-                      marker = new google.maps.Marker({
-                          position: location,
+                      var marker = new google.maps.Marker({
+                          position: uluru,
                           map: map
                       });
                       map.data.setStyle(styleFeature());
                       loadMapShapes();
                   }
 
+                  // function initMap() {
+                  //     var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
+                  //     google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                  //         var place = autocomplete.getPlace();
+                  //         getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
+                  //         location = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() };
+                  //         map.setCenter(location);
+                  //         console.log("new address" + location);
+                  //
+                  //         $('.showMe').slideToggle('slow');
+                  //     });
+                  //
+                  //     map = new google.maps.Map(document.getElementById('map'), {
+                  //         zoom: 4,
+                  //         center: location
+                  //     });
+                  //     var marker = new google.maps.Marker({
+                  //         position: location,
+                  //         map: map
+                  //     });
+                  //     map.data.setStyle(styleFeature());
+                  //     loadMapShapes();
+                  // }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes");
+                      console.log("loading map shapes v4");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
