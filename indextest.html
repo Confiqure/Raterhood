@@ -110,7 +110,7 @@
                           marker.setPosition({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           map.setZoom(12);
                           $('html, body').animate({
-                              scrollTop: $(".showMe").offset().top
+                              scrollTop: $(".showMe").offset().top - 50;
                           }, 2000);
                       });
 
@@ -195,13 +195,13 @@
                       infowindow.open(map);
 
                   }
-                  
+
                   window.onload = function() {
                     if(localStorage.getItem("boobs") !== null){
                         document.getElementById("address").value = localStorage.getItem("boobs");
                     }
                   }
-                  
+
               </script>
             </div>
           </div>
