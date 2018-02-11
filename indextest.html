@@ -99,19 +99,24 @@
                   function initMap() {
                       var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
                       google.maps.event.addListener(autocomplete, 'place_changed', function() {
-                          var place = autocomplete.getPlace();
-                          localStorage.setItem("boobs", "I love boobs");
-                          getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
-                          console.log(place.address_components);
-                          //zipsMap = getScoreMap();
-                          $('.showMe').slideDown('slow');
-                          google.maps.event.trigger(map,'resize');
-                          map.setCenter({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
-                          marker.setPosition({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
-                          map.setZoom(14);
-                          $('html, body').animate({
-                              scrollTop: $(".showMe").offset().top - 62
-                          }, 2000);
+                        try{
+                            var place = autocomplete.getPlace();
+                            localStorage.setItem("boobs", "I love boobs");
+                            getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
+                            console.log(place.address_components);
+                            //zipsMap = getScoreMap();
+                            $('.showMe').slideDown('slow');
+                            google.maps.event.trigger(map,'resize');
+                            map.setCenter({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
+                            marker.setPosition({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
+                            map.setZoom(14);
+                            $('html, body').animate({
+                                scrollTop: $(".showMe").offset().top - 62
+                            }, 2000);
+                          }
+                        catch(err){
+                          
+                        }
                       });
 
                       map = new google.maps.Map(document.getElementById('map'), {
