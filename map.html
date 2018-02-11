@@ -96,7 +96,7 @@
             <div id="census-max">max</div>
         </div>
     </div>
-    
+
     <div id="map"></div>
     <script>
         document.write('<script type="text/javascript" src= "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" ><\/script>');
@@ -115,10 +115,11 @@
         var map;
         var censusMin = Number.MAX_VALUE, censusMax = -Number.MAX_VALUE;
         var infowindow;
+        var homescore, crime, commute, schools, overall;
 
         function initMap() {
-            var lat = 43.1389;
-            var lng = -70.937
+            var lat = 42.3601;
+            var lng = -71.0589;
             var uluru = { lat: lat, lng: lng };
             // load the map
             map = new google.maps.Map(document.getElementById('map'), {
@@ -126,6 +127,7 @@
                 zoom: 12,
                 //styles: mapStyle
             });
+            map.setOptions({ minZoom: 12, maxZoom: 15 });
 
             var marker = new google.maps.Marker({
                 position: uluru,
@@ -150,7 +152,7 @@
         /** Loads the state boundary polygons from a GeoJSON source. */
         function loadMapShapes() {
             // load US state outline polygons from a GeoJson file
-            map.data.loadGeoJson('https://storage.googleapis.com/mapsdevsite/json/states.js', { idPropertyName: 'STATE' });
+            map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
             // wait for the request to complete by listening for the first feature to be
             // added
@@ -235,7 +237,10 @@
             var showRow = true;
             if (feature.getProperty('census_variable') == null ||
                 isNaN(feature.getProperty('census_variable'))) {
-                showRow = false;
+                color[0] = 255;
+                color[1] = 255;
+                color[2] = 255;
+    //            showRow = false;
             }
 
             var outlineWeight = 0.5, zIndex = 1;
@@ -245,10 +250,10 @@
 
             return {
                 strokeWeight: outlineWeight,
-                strokeColor: '#fff',
+                strokeColor: '#000000',
                 zIndex: zIndex,
                 fillColor: 'hsl(' + color[0] + ',' + color[1] + '%,' + color[2] + '%)',
-                fillOpacity: 0.75,
+                fillOpacity: 0.5,
                 visible: showRow
             };
         }
@@ -287,8 +292,18 @@
             //document.getElementById('data-caret').style.display = 'block';
             //document.getElementById('data-caret').style.paddingLeft = percent + '%';
         }
+        /** Computes the overall metric score.
+         *  
+         * @param hs
+         * @param cr
+         * @param cm
+         * @param sc
+         */
+        function computeOverall(hs, cr, cm, sc) {
+            return (hs * .35) + (cr * .25) + (cm * .25) + (sc * .15);
+        }
 
-        
+
 
     </script>
     <script async defer
