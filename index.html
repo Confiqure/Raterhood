@@ -208,10 +208,10 @@
 
                     // wire up the button
                     var selectBox = document.getElementById('census-variable');
-                    // google.maps.event.addDomListener(selectBox, 'change', function () {
-                    //     clearCensusData();
-                    //     loadCensusData(selectBox.options[selectBox.selectedIndex].value);
-                    // });
+                    google.maps.event.addDomListener(selectBox, 'change', function () {
+                        clearCensusData();
+                        loadCensusData(selectBox.options[selectBox.selectedIndex].value);
+                    });
 
                     // state polygons only need to be loaded once, do them now
                     loadMapShapes();
