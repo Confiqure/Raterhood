@@ -1,6 +1,6 @@
 function getNearbyZipCodes(local_zip)
 {
-    return new Zips(function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
     var req = new XMLHttpRequest();
     req.open( 'GET', 'https://www.zipcodeapi.com/rest/js-JjMMmEtIsTuB9auc1hQ8PimXXHZFrAr724TyHJnxQh9zKeQfV37gkb0fNoUbpPPv/radius.csv/'+local_zip+'/10/miles?minimal');
     
