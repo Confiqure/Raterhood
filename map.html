@@ -185,7 +185,8 @@
                     if (censusVariable > censusMax) {
                         censusMax = censusVariable;
                     }
-
+                    if (censusVariable == null)
+                        censusVariable = 0;
                     // update the existing row with the new data
                     map.data
                         .getFeatureById(stateId)
@@ -193,10 +194,10 @@
                 });
 
                 // update and display the legend
-                document.getElementById('census-min').textContent =
-                    censusMin.toLocaleString();
-                document.getElementById('census-max').textContent =
-                    censusMax.toLocaleString();
+                //document.getElementById('census-min').textContent =
+                  //  censusMin.toLocaleString();
+                //document.getElementById('census-max').textContent =
+                  //  censusMax.toLocaleString();
             };
             xhr.send();
         }
@@ -275,7 +276,7 @@
 
             var content = "<b>" + e.feature.getProperty('NAME') + "</b><br/>Homescore: " +
                 e.feature.getProperty('census_variable').toLocaleString() + "<br/>Crime: " +
-                "<br/>Commute:" + "<br/>School:" + "<br/><b>Overall:</b>";
+                "<br/>Commute:" + "<br/>School:" + "<br/><b>Overall:" + overall + "</b>";
 
             infowindow = new google.maps.InfoWindow({
                 content: content,
@@ -300,6 +301,10 @@
          * @param sc
          */
         function computeOverall(hs, cr, cm, sc) {
+            if (hs == 0)
+                return (cr * .40) + (cm * .35) + (sc * .25);
+            else if (sc == 0)
+                return (hs * .40) + (cr * .35) + (sc * .25);
             return (hs * .35) + (cr * .25) + (cm * .25) + (sc * .15);
         }
 
