@@ -26,6 +26,7 @@
 
     <!-- Google autocomplete api -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="js/api/homescore.js"></script>
 
   </head>
 
@@ -89,8 +90,7 @@
                     var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
                     google.maps.event.addListener(autocomplete, 'place_changed', function() {
                         var place = autocomplete.getPlace();
-                        console.log(place.geometry.location.lat());
-                        console.log(place.geometry.location.lng());
+                        getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
                         console.log(place.address_components);
                     });
 
