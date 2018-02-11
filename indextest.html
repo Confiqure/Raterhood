@@ -188,7 +188,7 @@
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v47");
+                      console.log("loading map shapes v48");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
@@ -283,8 +283,8 @@
                         console.log("Longitude: ",lng);
                         console.log("Zip: ",zip);
                             var request = new XMLHttpRequest();
-                            request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + lat + '&lon=' + lng + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F', true);
-                            request.withCredentials = true;
+                            request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + lat + '&lon=' + lng + '&apikey=CL4ngUpXeQStswEgyGG2v8ypaaZmoKFj');
+                        //    request.withCredentials = true;
                             var solution = [];
                             request.onload = function(){
                               console.log(request.responseText);
