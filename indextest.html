@@ -118,6 +118,7 @@
                           map: map
                       });
                       map.data.setStyle(styleFeature);
+                      map.data.addListener('click', mouseInToRegion);
                       loadMapShapes();
                   }
 
