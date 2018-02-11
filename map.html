@@ -110,6 +110,10 @@
     </div>
     <div id="map"></div>
     <script>
+        document.write('<script type="text/javascript" src= "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" ><\/script>');
+
+
+
         var mapStyle = [{
             'stylers': [{ 'visibility': 'off' }]
         }, {
@@ -265,6 +269,7 @@
          * @param {?google.maps.MouseEvent} e
          */
         function mouseInToRegion(e) {
+            infowindow.close();
 
             // set the hover state so the setStyle function can change the border
             e.feature.setProperty('state', 'hover');
