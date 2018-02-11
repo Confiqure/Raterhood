@@ -269,8 +269,10 @@
          * @param {?google.maps.MouseEvent} e
          */
         function mouseInToRegion(e) {
-            //infowindow.close();
-            $(".gm-style-iw").parentElement.remove();
+            try {
+                $(".gm-style-iw").parentElement.remove();
+            }
+            catch (err) {}
             // 8=====D
 
             // set the hover state so the setStyle function can change the border
