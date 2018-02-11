@@ -6,27 +6,11 @@
     <script type="text/javascript" src="js/api/apis.js"></script>
     <script>
         
-        function getSpotCrimeData(long_state)
-        {
-            state = abbrState(long_state, 'abbr');
-            var request = new XMLHttpRequest();
-            request.open( 'GET', 'https://api.usa.gov/crime/fbi/ucr/estimates/states/'+state+'?page=1&per_page=1000&output=json&api_key=iiHnOKfno2Mgkt5AynpvPpUQTEyxE77jo1RU8PIv');
-            request.setRequestHeader('Accept', 'application/json');
-            request.onload = function(){
-                var json_data = JSON.parse( request.response );
-                var length = (json_data['results'].length);
-                var relevant_data = json_data['results'][length-1];
-                var total_crimes = relevant_data['aggravated_assault'] + relevant_data['burglary'] + relevant_data['homicide'];
-                total_crimes += relevant_data['caveats'] + relevant_data['rape_legacy'] + relevant_data['violent_crime'];
-                total_crimes += relevant_data['larceny'] + relevant_data['property_crime'] + relevant_data['robbery'];
-                total_crimes += relevant_data['rape_revised'] + relevant_data['motor_vehicle_theft'];
-                var population = relevant_data['population'];
-                console.log( (total_crimes/population)*100 );
-            };
-            request.send();
-        }
-        
-        getSpotCrimeData("New Hampshire");
+        getSpotCrimeData("New Hampshire").then(function(response) {
+                console.log("Success!", response);
+            }, function(error) {
+                console.error("Failed!", error);
+        });
         
         getNearbyZipCodes("03063").then(function(response) {
                 console.log("Success!", response);
