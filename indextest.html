@@ -78,7 +78,7 @@
       </div>
     </header>
 
-    <div class="showMe">
+    <div class="showMe" style="display:none">
       <section class="bg-darker" id="map">
         <div class="container">
           <div class="row">
@@ -105,7 +105,8 @@
                           marker.setPosition({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
                           console.log(place.address_components);
                           //zipsMap = getScoreMap();
-                  //        $('.showMe').slideToggle('slow');
+                          $('.showMe').slideToggle('slow');
+                          map.setZoom(12);
                       });
 
                       map = new google.maps.Map(document.getElementById('map'), {
@@ -121,7 +122,7 @@
                   }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v20");
+                      console.log("loading map shapes v21");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
