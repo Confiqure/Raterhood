@@ -269,28 +269,27 @@
 
             var percent = (e.feature.getProperty('census_variable') - censusMin) /
                 (censusMax - censusMin) * 100;
-            
+
+            var content = e.feature.getProperty('NAME') + "<br/>" +
+                e.feature.getProperty('census_variable').toLocaleString();
 
             infowindow = new google.maps.InfoWindow({
-                content: info(e),
+                content: content,
                 position: e.latLng
             });
             infowindow.open(map);
 
             // update the label
-            document.getElementById('data-label').textContent =
-                e.feature.getProperty('NAME');
-            document.getElementById('data-value').textContent =
-                e.feature.getProperty('census_variable').toLocaleString();
+            //document.getElementById('data-label').textContent =
+              //  e.feature.getProperty('NAME');
+            //document.getElementById('data-value').textContent =
+              //  e.feature.getProperty('census_variable').toLocaleString();
             //document.getElementById('data-box').style.display = 'block';
-            document.getElementById('data-caret').style.display = 'block';
-            document.getElementById('data-caret').style.paddingLeft = percent + '%';
+            //document.getElementById('data-caret').style.display = 'block';
+            //document.getElementById('data-caret').style.paddingLeft = percent + '%';
         }
 
-        function info(e) {
-            return e.feature.getProperty('NAME') + '\n' +
-                e.feature.getProperty('census_variable').toLocaleString();
-        }
+        
 
     </script>
     <script async defer
