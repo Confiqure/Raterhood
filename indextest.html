@@ -90,6 +90,7 @@
               <div id="map"></div>
               <script>
                 var map;
+                var zips = [01001, 01002, 01011];
                 var uluru = { lat: 43.1389, lng: -70.937 };
                 var marker;
                   function initMap() {
@@ -111,7 +112,7 @@
                           position: uluru,
                           map: map
                       });
-                      map.data.setStyle(styleFeature());
+                      map.data.setStyle(styleFeature;
                       loadMapShapes();
                   }
 
@@ -140,7 +141,7 @@
                   // }
 
                   function loadMapShapes() {
-                      console.log("loading map shapes v6");
+                      console.log("loading map shapes v7");
                       // load US state outline polygons from a GeoJson file
                       map.data.loadGeoJson('../confiqure.github.io/geojson/masszips.geojson', { idPropertyName: "NEIGHBOURHOOD" });
 
@@ -153,7 +154,17 @@
                   }
 
                   function styleFeature(feature) {
-
+                      console.log(feature.getProperty("POSTCODE"));
+                      if(feature.getProperty("POSTCODE") == 01001){
+                        return {
+                            strokeWeight: 0.5,
+                            strokeColor: '#000000',
+                            zIndex: 1,
+                            fillColor: '#000000',
+                            fillOpacity: 0.5,
+                            visible: true
+                        };
+                      }
                       return {
                           strokeWeight: 0.5,
                           strokeColor: '#000000',
