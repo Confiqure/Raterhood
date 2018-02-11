@@ -88,19 +88,20 @@
               <script>
                   var map;
                   var infowindow;
-                var zipsMap = new Map();
-                zipsMap.set("01001", 50);
-                zipsMap.set("02110", 25);
-                zipsMap.set("02114", 50);
-                zipsMap.set("02111", 75);
-                zipsMap.set("02108", 100);
-                var uluru = { lat: 43.1389, lng: -70.937 };
-                var marker;
+                  var zipsMap = new Map();
+                  zipsMap.set("01001", 50);
+                  zipsMap.set("02110", 25);
+                  zipsMap.set("02114", 50);
+                  zipsMap.set("02111", 75);
+                  zipsMap.set("02108", 100);
+                  var uluru = { lat: 43.1389, lng: -70.937 };
+                  var marker;
                   function initMap() {
                       var autocomplete = new google.maps.places.Autocomplete($("#address")[0], {});
                       google.maps.event.addListener(autocomplete, 'place_changed', function() {
                         try{
                             var place = autocomplete.getPlace();
+                            console.log( place );
                             localStorage.setItem("boobs", "I love boobs");
                             getHomeScore(place.geometry.location.lat(), place.geometry.location.lng());
                             console.log(place.address_components);
@@ -207,7 +208,27 @@
                     if(localStorage.getItem("boobs") !== null){
                         document.getElementById("address").value = localStorage.getItem("boobs");
                     }
-                  }
+                  };
+                  
+                  //var local_zip;
+                  // set zipsMap
+                  /*
+                    function homeScore(lat, long)
+                    {
+                            var request = new XMLHttpRequest();
+                            request.open( 'GET', 'https://apis.solarialabs.com/shine/v1/total-home-scores/reports?lat=' + latLong[0] + '&lon=' + latLong[1] + '&apikey=PKDoANGJvzGBIuWE0iVjA3rpvQlkmA5F');
+                            var solution = [];
+                            request.onload = function(){
+                                if (request.status === 200) {
+                                    var json_data = JSON.parse( request.response );
+                                    solution = (json_data['totalHomeScores']['safety']['value'] * 0.7);
+                                    solution += (json_data['totalHomeScores']['quiet']['value'] * 0.3);
+                                    console.log( solution );
+                            };
+                        request.send();
+                      };
+                    }
+                   */
 
               </script>
             </div>
