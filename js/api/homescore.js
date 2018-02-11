@@ -1,3 +1,4 @@
+/*
 function getHomeScore(lat, lon) {
     $.ajax({
         type: 'GET',
@@ -13,3 +14,4 @@ function getHomeScore(lat, lon) {
         }
     });
 }
+*/
