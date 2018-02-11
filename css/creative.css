@@ -170,6 +170,12 @@ img::-moz-selection {
   }
 }
 
+.logo {
+  width: 100px;
+  height: 100px;
+  fill: #0dba7b;
+}
+
 header.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 56px);
