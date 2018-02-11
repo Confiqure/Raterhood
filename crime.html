@@ -13,8 +13,6 @@
             request.open( 'GET', 'https://api.usa.gov/crime/fbi/ucr/estimates/states/'+state+'?page=1&per_page=1000&output=json&api_key=iiHnOKfno2Mgkt5AynpvPpUQTEyxE77jo1RU8PIv');
             request.setRequestHeader('Accept', 'application/json');
             request.onload = function(){
-                console.log( request.response );
-                console.log( request.status );
                 var json_data = JSON.parse( request.response );
                 var length = (json_data['results'].length);
                 var relevant_data = json_data['results'][length-1];

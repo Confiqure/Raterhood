@@ -16,6 +16,7 @@ function getLatLongFromZip(zipcode){
     latLong.push(['results'][0]['geometry']['location']['lng']);
     return latLong;
   };
+  req.send();
 }
 
 function getStateFromZip(zipcode){
@@ -29,6 +30,7 @@ function getStateFromZip(zipcode){
     state = responseJSON(['results'][0]['geometry']['location']['lng']);
     return state;
   };
+  req.send();
 }
 
 function getNearbyZipCodes(local_zip)
